@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{AD7FC49E-4BFB-ECCF-FCDB-C4B4F282937D}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Faster",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}
