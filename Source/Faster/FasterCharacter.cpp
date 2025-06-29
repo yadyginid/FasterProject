@@ -10,6 +10,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
+#include "Public/Components/ThrowComponent.h"
+#include "Public/Pickup/ScorePickUp.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -35,19 +37,38 @@ AFasterCharacter::AFasterCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+	
+	SelectedThrowMesh = CreateDefaultSubobject<UStaticMeshComponent>("SelectedThrowMesh");
+	ThrowComponent = CreateDefaultSubobject<UThrowComponent>("ThrowComponent");
 
+	SetReplicates(true);
 }
 
 void AFasterCharacter::BeginPlay()
 {
-	// Call the base class  
 	Super::BeginPlay();
+
+	// 1. Создаем кастомный набор правил
+	const FAttachmentTransformRules AttachmentRules(
+		EAttachmentRule::SnapToTarget, 
+		EAttachmentRule::SnapToTarget, 
+		EAttachmentRule::KeepRelative, 
+		true                         
+	);
+	
+	SelectedThrowMesh->AttachToComponent(GetMesh1P(), AttachmentRules, FName(TEXT("PickupPreviewSocket")));
+
+	ThrowComponent->OnSelectedItemChanged.AddDynamic(this, &AFasterCharacter::OnSelectedItemChanged);
+	ThrowComponent->OnThrowItem.AddDynamic(this, &AFasterCharacter::OnThrowItem);
+	
+	OnSelectedItemChanged();
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
 
 void AFasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{	
+{
+	//if(HasAuthority()) return;
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
@@ -60,6 +81,11 @@ void AFasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFasterCharacter::Look);
+
+
+		EnhancedInputComponent->BindAction(ThrowComponent->ThrowAction, ETriggerEvent::Triggered, ThrowComponent, &UThrowComponent::Client_Throw);
+		EnhancedInputComponent->BindAction(ThrowComponent->NextThrowItemAction, ETriggerEvent::Triggered, ThrowComponent, &UThrowComponent::Client_SelectNextItem);
+		EnhancedInputComponent->BindAction(ThrowComponent->PrevThrowItemAction, ETriggerEvent::Triggered, ThrowComponent, &UThrowComponent::Client_SelectPreviousItem);
 	}
 	else
 	{
@@ -67,6 +93,24 @@ void AFasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+void AFasterCharacter::OnSelectedItemChanged()
+{
+	auto SelectedThrowClass = ThrowComponent->GetSelectedThrowClass();
+	if(!SelectedThrowClass) return;
+	
+	auto ScorePickup = SelectedThrowClass->GetDefaultObject<AScorePickUp>();
+	if(!ScorePickup) return;
+	
+	auto ScorePickupStaticMeshComponent = ScorePickup->ScorePickUpStaticMesh;
+	if(!ScorePickupStaticMeshComponent) return;
+	
+	SelectedThrowMesh->SetStaticMesh(ScorePickupStaticMeshComponent->GetStaticMesh());
+}
+
+void AFasterCharacter::OnThrowItem()
+{
+	SelectedThrowMesh->SetVisibility(false);
+}
 
 void AFasterCharacter::Move(const FInputActionValue& Value)
 {

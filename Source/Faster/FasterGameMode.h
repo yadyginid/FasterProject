@@ -13,6 +13,9 @@ class AFasterGameMode : public AGameModeBase
 
 public:
 	AFasterGameMode();
+
+	void ScorePickUpItemWasThrow();
+	void ScorePickUpItemWasTake();
 };
 
 
