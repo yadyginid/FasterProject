@@ -91,6 +91,7 @@ void AFasterCharacter::OnSelectedItemChanged()
 	if(!ScorePickupStaticMeshComponent) return;
 	
 	SelectedThrowMesh->SetStaticMesh(ScorePickupStaticMeshComponent->GetStaticMesh());
+	SelectedThrowMesh->SetMaterial(0, ScorePickupStaticMeshComponent->GetMaterial(0));
 }
 
 void AFasterCharacter::OnCanThrowItem(bool bCanThrowItem)

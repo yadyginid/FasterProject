@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "AICharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTakenItem);
+
 UCLASS()
 class FASTER_API AAICharacter : public ACharacter
 {
@@ -20,7 +22,13 @@ public:
 
 	UFUNCTION(Blueprintable)
 	float GetMoveSpeed() const {return MovementSpeed;}
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTakenItem OnTakenItem;
 	
+	UFUNCTION()
+	void OnItemTaken() const;
+
 	UPROPERTY(ReplicatedUsing=OnRep_ChangeMoveSpeed)
 	float MovementSpeed = 300.f;
 

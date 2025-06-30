@@ -27,14 +27,16 @@ void AScorePickUp::BeginPlay()
 void AScorePickUp::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-
+	
+	const AAICharacter* AIChar = Cast<AAICharacter>(OtherActor);
+	if(!AIChar) return;
+	AIChar->OnItemTaken();
+	
 	if (!HasAuthority())
 	{
 		return;
 	}
-
-	const AAICharacter* AIChar = Cast<AAICharacter>(OtherActor);
-	if(!AIChar) return;
+	
 	if (const auto FasterPlayerState = AIChar->GetPlayerState(); AIChar && FasterPlayerState)
 	{
 		if (const auto GameMode = GetWorld()->GetAuthGameMode<AFasterGameMode>())

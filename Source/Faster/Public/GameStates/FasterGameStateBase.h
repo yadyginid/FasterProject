@@ -35,7 +35,7 @@ public:
 	bool bEndMatch = false;
 	
 	void UpdateLeader();
-	
+
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

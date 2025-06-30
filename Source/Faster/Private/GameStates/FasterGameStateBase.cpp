@@ -2,7 +2,6 @@
 
 
 #include "GameStates/FasterGameStateBase.h"
-
 #include "FasterPlayerState.h"
 #include "GameFramework/PlayerState.h"
 #include "Net/UnrealNetwork.h"

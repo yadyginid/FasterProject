@@ -69,3 +69,8 @@ void AAICharacter::SetMovementSpeed(float NewSpeed)
 	}
 }
 
+void AAICharacter::OnItemTaken() const
+{
+	OnTakenItem.Broadcast();
+}
+
