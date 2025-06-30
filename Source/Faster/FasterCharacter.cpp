@@ -48,6 +48,8 @@ void AFasterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	FasterGameState = Cast<AFasterGameStateBase>(GetWorld()->GetGameState());
+	
 	// 1. Создаем кастомный набор правил
 	const FAttachmentTransformRules AttachmentRules(
 		EAttachmentRule::SnapToTarget, 
@@ -59,7 +61,7 @@ void AFasterCharacter::BeginPlay()
 	SelectedThrowMesh->AttachToComponent(GetMesh1P(), AttachmentRules, FName(TEXT("PickupPreviewSocket")));
 
 	ThrowComponent->OnSelectedItemChanged.AddDynamic(this, &AFasterCharacter::OnSelectedItemChanged);
-	ThrowComponent->OnThrowItem.AddDynamic(this, &AFasterCharacter::OnThrowItem);
+	FasterGameState->OnChangeCanThrow.AddDynamic(this, &AFasterCharacter::OnCanThrowItem);
 	
 	OnSelectedItemChanged();
 }
@@ -107,9 +109,9 @@ void AFasterCharacter::OnSelectedItemChanged()
 	SelectedThrowMesh->SetStaticMesh(ScorePickupStaticMeshComponent->GetStaticMesh());
 }
 
-void AFasterCharacter::OnThrowItem()
+void AFasterCharacter::OnCanThrowItem(bool bCanThrowItem)
 {
-	SelectedThrowMesh->SetVisibility(false);
+	SelectedThrowMesh->SetVisibility(bCanThrowItem);
 }
 
 void AFasterCharacter::Move(const FInputActionValue& Value)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameStates/FasterGameStateBase.h"
 #include "Logging/LogMacros.h"
 #include "FasterCharacter.generated.h"
 
@@ -70,11 +71,14 @@ private:
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
-	
+
+	UPROPERTY()
+	AFasterGameStateBase* FasterGameState;
+
 	UFUNCTION()
 	void OnSelectedItemChanged();
 
 	UFUNCTION()
-	void OnThrowItem();
+	void OnCanThrowItem(bool bCanThrowItem);
 };
 

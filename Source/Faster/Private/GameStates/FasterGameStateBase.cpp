@@ -11,3 +11,8 @@ void AFasterGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AFasterGameStateBase, bCanThrowItem);
 }
+
+void AFasterGameStateBase::OnRep_bCanThrowItem()
+{
+	OnChangeCanThrow.Broadcast(bCanThrowItem);
+}

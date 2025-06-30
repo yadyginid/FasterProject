@@ -87,7 +87,7 @@ void UThrowComponent::Server_Throw_Implementation()
 	PlayThrowAnimation();
 	CountThrowAnimation++;
 
-	FasterGameMode->ScorePickUpItemWasThrow();
+	FasterGameMode->ScorePickUpItemWasThrown(ScorePickUp);
 }
 
 void UThrowComponent::HandleRoundReset()

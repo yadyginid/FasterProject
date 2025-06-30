@@ -21,7 +21,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UProjectileMovementComponent* ProjectileMovement;
-	
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 Points = 1;
+
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };
