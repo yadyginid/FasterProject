@@ -39,7 +39,6 @@ void AFasterAIController::OnToyThrown(AActor* ThrownActor)
 
 	 if(const auto AIPawn = Cast<AAICharacter>(GetPawn()))
 	{
-		AIPawn->SetReplicates(true);
 		AIPawn->bEnableRotate = false;
 	}
 }
@@ -51,5 +50,6 @@ void AFasterAIController::OnToyTaken()
 	if(const auto AIPawn = Cast<AAICharacter>(GetPawn()))
 	{
 		AIPawn->bEnableRotate = true;
+		UE_LOG(LogTemp, Warning, TEXT("AFasterAIController::OnToyTaken"));
 	}
 }

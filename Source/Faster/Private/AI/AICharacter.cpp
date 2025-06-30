@@ -16,7 +16,7 @@ AAICharacter::AAICharacter()
 void AAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	if(HasAuthority()) return;
 	if(bEnableRotate && LocalPlayer)
 	{

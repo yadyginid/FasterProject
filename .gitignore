@@ -79,4 +79,4 @@ DerivedDataCache/*
 !Game/**/
 !Game/WindowsNoEditor/**
 
-GameBuild/
+GamesBuild/

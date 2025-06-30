@@ -40,8 +40,10 @@ void AFasterGameStateBase::UpdateLeader()
 void AFasterGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
 	DOREPLIFETIME(AFasterGameStateBase, bCanThrowItem);
 	DOREPLIFETIME(AFasterGameStateBase, MatchEndTime);
+	DOREPLIFETIME(AFasterGameStateBase, bEndMatch);
 }
 
 void AFasterGameStateBase::OnRep_bCanThrowItem()
