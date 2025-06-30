@@ -54,6 +54,11 @@ void AAICharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	DOREPLIFETIME(AAICharacter, MovementSpeed);
 }
 
+void AAICharacter::OnRep_ChangeMoveSpeed()
+{
+	SetMovementSpeed(MovementSpeed);
+}
+
 
 void AAICharacter::SetMovementSpeed(float NewSpeed)
 {

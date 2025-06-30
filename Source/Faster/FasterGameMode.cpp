@@ -23,6 +23,20 @@ void AFasterGameMode::StartPlay()
 {
 	Super::StartPlay();
 	SpawnAI();
+
+	if (const auto FasterGameStateBase = GetGameState<AFasterGameStateBase>())
+	{
+		const float ServerTime = GetWorld()->GetTimeSeconds();
+		FasterGameStateBase->MatchEndTime = ServerTime + MatchDuration;
+		
+		GetWorld()->GetTimerManager().SetTimer(
+			MatchTimerHandle, 
+			this, 
+			&AFasterGameMode::EndMatch,
+			MatchDuration, 
+			false
+		);
+	}
 }
 
 void AFasterGameMode::ScorePickUpItemWasThrown(AActor* ThrownItem)
@@ -40,9 +54,21 @@ void AFasterGameMode::ScorePickUpItemWasTaken(APlayerState* PlayerState, int32 S
 	if(!FasterGameStateBase) return;
 
 	FasterGameStateBase->bCanThrowItem = true;
+	int32 NewPoints = PlayerState->GetScore() + Score;
 	PlayerState->SetScore(PlayerState->GetScore() + Score);
 
 	FasterGameStateBase->OnAddScoreEvent.Broadcast();
+	FasterGameStateBase->UpdateLeader();
+}
+
+void AFasterGameMode::StartMatch()
+{
+	
+}
+
+void AFasterGameMode::Restart()
+{
+	GetWorld()->ServerTravel("?restart");
 }
 
 void AFasterGameMode::SpawnAI()
@@ -51,7 +77,6 @@ void AFasterGameMode::SpawnAI()
 	UGameplayStatics::GetAllActorsOfClass(this, APlayerStart::StaticClass(), SpawnPoints);
 
 	int32 SpawnPointIndex = 0;
-	
 	for (FAiConfiguration& Config : AIConfigurations)
 	{
 		if (AmountAI < SpawnPointIndex)
@@ -65,10 +90,9 @@ void AFasterGameMode::SpawnAI()
 		if (AAICharacter* NewAI = GetWorld()->SpawnActor<AAICharacter>(AICharacterClass, SpawnLocation, SpawnRotation))
 		{
 			SetupAISpeed(Config, NewAI);
-			
 			if(const auto FasterPlayerState = Cast<AFasterPlayerState>(NewAI->GetPlayerState()))
 			{
-				FasterPlayerState->Name = Config.AIName;
+				FasterPlayerState->SetPlayerName(Config.AIName);
 			}
 			
 			SpawnPointIndex++;
@@ -88,5 +112,15 @@ void AFasterGameMode::SetupAISpeed(FAiConfiguration& Config, AAICharacter* NewAI
 		SpeedToSet = Config.Speed;
 	}
 	NewAI->SetMovementSpeed(SpeedToSet);
+
+	UE_LOG(LogTemp, Warning, TEXT("SetupAISpeed is: %f"), SpeedToSet);
+}
+
+void AFasterGameMode::EndMatch()
+{
+	auto FasterGameStateBase = GetGameState<AFasterGameStateBase>();
+	if(!FasterGameStateBase) return;
+	
+	FasterGameStateBase->bEndMatch = true;
 }
 

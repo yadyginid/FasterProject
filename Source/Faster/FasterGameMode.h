@@ -50,11 +50,23 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 AmountAI = 5;
+
+	void StartMatch();
+	UFUNCTION(BlueprintCallable)
+	void Restart();
+
 	
 private:
-	void SpawnAI();
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+	float MatchDuration = 30.f;
 
+	UPROPERTY()
+	FTimerHandle MatchTimerHandle;
+
+	void SpawnAI();
 	void SetupAISpeed(FAiConfiguration& Config, AAICharacter* NewAI);
+
+	void EndMatch();
 };
 
 

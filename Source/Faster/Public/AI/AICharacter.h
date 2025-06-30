@@ -21,7 +21,7 @@ public:
 	UFUNCTION(Blueprintable)
 	float GetMoveSpeed() const {return MovementSpeed;}
 	
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing=OnRep_ChangeMoveSpeed)
 	float MovementSpeed = 300.f;
 
 	bool bEnableRotate = true;
@@ -35,4 +35,6 @@ private:
 	UPROPERTY()
 	APawn* LocalPlayer;
 
+	UFUNCTION()
+	void OnRep_ChangeMoveSpeed();
 };

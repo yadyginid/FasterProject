@@ -15,6 +15,10 @@ UCLASS()
 class FASTER_API AFasterPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_RestartGame();
 	
 protected:
 
