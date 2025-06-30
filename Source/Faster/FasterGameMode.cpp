@@ -50,20 +50,14 @@ void AFasterGameMode::ScorePickUpItemWasThrown(AActor* ThrownItem)
 
 void AFasterGameMode::ScorePickUpItemWasTaken(APlayerState* PlayerState, int32 Score)
 {
-	auto FasterGameStateBase = GetGameState<AFasterGameStateBase>();
+	const auto FasterGameStateBase = GetGameState<AFasterGameStateBase>();
 	if(!FasterGameStateBase) return;
 
 	FasterGameStateBase->bCanThrowItem = true;
-	int32 NewPoints = PlayerState->GetScore() + Score;
 	PlayerState->SetScore(PlayerState->GetScore() + Score);
 
 	FasterGameStateBase->OnAddScoreEvent.Broadcast();
 	FasterGameStateBase->UpdateLeader();
-}
-
-void AFasterGameMode::StartMatch()
-{
-	
 }
 
 void AFasterGameMode::Restart()

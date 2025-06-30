@@ -8,7 +8,6 @@
 #include "Net/UnrealNetwork.h"
 
 
-// Sets default values
 AAICharacter::AAICharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;

@@ -58,8 +58,6 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_SelectPreviousItem();
 	
-	void HandleRoundReset();
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	TArray<TSubclassOf<AScorePickUp>> PickupThrowClasses;
 
@@ -70,7 +68,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	UAnimMontage* ThrowAnimation;
 	
-	UPROPERTY(ReplicatedUsing = OnRep_CanThow)
+	UPROPERTY()
 	bool bCanThrow = true;
 
 	UPROPERTY()
@@ -90,19 +88,12 @@ private:
 	AFasterGameMode* FasterGameMode;
 	
 	UFUNCTION()
-	void OnRep_PickupThrowClass();
+	void OnRep_PickupThrowClass() const;
 
 	UFUNCTION()
-	void OnRep_CountThrowAnimation();
+	void OnRep_CountThrowAnimation() const;
 	
-	UFUNCTION()
-	void OnRep_CanThow();
-
-	void ShowSelectedPickupThrowClass();
-
-	void PlayThrowAnimation();
-
-	void ShowPickupThrowClass();
+	void PlayThrowAnimation() const;
 
 	void Equip();
 };

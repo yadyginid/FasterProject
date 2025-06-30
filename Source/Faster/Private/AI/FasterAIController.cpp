@@ -2,7 +2,6 @@
 
 
 #include "AI/FasterAIController.h"
-
 #include "AI/AICharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameStates/FasterGameStateBase.h"
@@ -38,8 +37,7 @@ void AFasterAIController::OnToyThrown(AActor* ThrownActor)
 {
 	 Blackboard->SetValueAsObject(TEXT("PickupTarget"), ThrownActor);
 
-	auto AIPawn = Cast<AAICharacter>(GetPawn());
-	if(AIPawn)
+	 if(const auto AIPawn = Cast<AAICharacter>(GetPawn()))
 	{
 		AIPawn->SetReplicates(true);
 		AIPawn->bEnableRotate = false;
@@ -49,9 +47,8 @@ void AFasterAIController::OnToyThrown(AActor* ThrownActor)
 void AFasterAIController::OnToyTaken()
 {
 	Blackboard->SetValueAsObject(TEXT("PickupTarget"), nullptr);
-	
-	auto AIPawn = Cast<AAICharacter>(GetPawn());
-	if(AIPawn)
+
+	if(const auto AIPawn = Cast<AAICharacter>(GetPawn()))
 	{
 		AIPawn->bEnableRotate = true;
 	}

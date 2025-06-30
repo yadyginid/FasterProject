@@ -1,12 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Faster/Public/Components/ThrowComponent.h"
-
-#include "EnhancedInputComponent.h"
 #include "Faster/FasterCharacter.h"
 #include "Faster/FasterGameMode.h"
-#include "GameFramework/Character.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "GameStates/FasterGameStateBase.h"
 #include "Net/UnrealNetwork.h"
 #include "Pickup/ScorePickUp.h"
@@ -37,7 +33,6 @@ void UThrowComponent::Equip()
 		SelectedPickupThrowClass = PickupThrowClasses[0];
 	}
 }
-
 
 void UThrowComponent::Client_Throw()
 {
@@ -80,7 +75,19 @@ void UThrowComponent::Server_Throw_Implementation()
 {
 	if(!CanThrow()) return;
 	
-	FTransform SpawnTransform = OwnerCharacter->GetSelectedThrowMesh()->GetComponentTransform();
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+
+	const AController* OwnerController = OwnerCharacter->GetController();
+	if (!OwnerController) return;
+    
+	OwnerController->GetPlayerViewPoint(PlayerViewPointLocation, PlayerViewPointRotation);
+	
+	const FVector SpawnLocation = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * 100.0f);
+	const FRotator SpawnRotation = PlayerViewPointRotation;
+	FTransform SpawnTransform(SpawnRotation, SpawnLocation);
+
+	
 	SpawnTransform.SetScale3D(FVector(5));
 	auto ScorePickUp = GetWorld()->SpawnActor<AScorePickUp>(SelectedPickupThrowClass, SpawnTransform);
 	
@@ -90,17 +97,11 @@ void UThrowComponent::Server_Throw_Implementation()
 	FasterGameMode->ScorePickUpItemWasThrown(ScorePickUp);
 }
 
-void UThrowComponent::HandleRoundReset()
-{
-}
-
-
 void UThrowComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UThrowComponent, SelectedPickupThrowClass);
-	DOREPLIFETIME(UThrowComponent, bCanThrow);
 	DOREPLIFETIME(UThrowComponent, CountThrowAnimation);
 }
 
@@ -109,37 +110,22 @@ bool UThrowComponent::CanThrow() const
 	return FasterGameStateBase->bCanThrowItem;
 }
 
-void UThrowComponent::OnRep_PickupThrowClass()
+void UThrowComponent::OnRep_PickupThrowClass() const
 {
 	OnSelectedItemChanged.Broadcast();
 }
 
-void UThrowComponent::OnRep_CountThrowAnimation()
+void UThrowComponent::OnRep_CountThrowAnimation() const
 {
 	PlayThrowAnimation();
 	OnSelectedItemChanged.Broadcast();
 }
 
-void UThrowComponent::OnRep_CanThow()
-{
-	
-}
-
-void UThrowComponent::ShowSelectedPickupThrowClass()
-{
-	if(!OwnerCharacter) return;
-}
-
-void UThrowComponent::PlayThrowAnimation()
+void UThrowComponent::PlayThrowAnimation() const
 {
 	if(!OwnerCharacter) return;
 	const auto AnimInstance = OwnerCharacter->GetMesh1P()->GetAnimInstance();
 	if(!AnimInstance) return;
 
 	AnimInstance->Montage_Play(ThrowAnimation);
-}
-
-void UThrowComponent::ShowPickupThrowClass()
-{
-	
 }

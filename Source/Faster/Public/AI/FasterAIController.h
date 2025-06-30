@@ -6,9 +6,7 @@
 #include "AIController.h"
 #include "FasterAIController.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class FASTER_API AFasterAIController : public AAIController
 {

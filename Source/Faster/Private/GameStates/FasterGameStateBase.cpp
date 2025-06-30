@@ -13,7 +13,7 @@ void AFasterGameStateBase::UpdateLeader()
 	int32 MaxScore = 0;
 	for (APlayerState* PlayerState : PlayerArray)
 	{
-		auto FasterPlayerState = Cast<AFasterPlayerState>(PlayerState);
+		const auto FasterPlayerState = Cast<AFasterPlayerState>(PlayerState);
 		if(!FasterPlayerState) return;
 		
 		FasterPlayerState->bWinner = false;
@@ -27,7 +27,7 @@ void AFasterGameStateBase::UpdateLeader()
 
 	for (APlayerState* PlayerState : PlayerArray)
 	{
-		auto FasterPlayerState = Cast<AFasterPlayerState>(PlayerState);
+		const auto FasterPlayerState = Cast<AFasterPlayerState>(PlayerState);
 		if(!FasterPlayerState) return;
 		
 		if(FasterPlayerState->GetScore() >= MaxScore)

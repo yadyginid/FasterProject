@@ -50,12 +50,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 AmountAI = 5;
-
-	void StartMatch();
+	
 	UFUNCTION(BlueprintCallable)
 	void Restart();
 
-	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 	float MatchDuration = 30.f;

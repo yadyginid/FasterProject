@@ -2,7 +2,6 @@
 
 
 #include "FasterPlayerState.h"
-
 #include "Net/UnrealNetwork.h"
 
 void AFasterPlayerState::OnRep_Score()
