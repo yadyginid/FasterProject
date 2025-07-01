@@ -5,7 +5,6 @@
 
 #include "AI/AICharacter.h"
 #include "Faster/FasterGameMode.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 
 AScorePickUp::AScorePickUp()
 {
@@ -15,8 +14,7 @@ AScorePickUp::AScorePickUp()
 	
 	ScorePickUpStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("ScorePickUpStaticMesh");
 	SetRootComponent(ScorePickUpStaticMesh);
-	
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovement");
+	ScorePickUpStaticMesh->SetSimulatePhysics(true);
 }
 
 void AScorePickUp::BeginPlay()

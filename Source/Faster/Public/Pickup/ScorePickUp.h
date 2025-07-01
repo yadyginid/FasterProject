@@ -18,10 +18,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* ScorePickUpStaticMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UProjectileMovementComponent* ProjectileMovement;
-
+	
 	UPROPERTY(EditDefaultsOnly)
 	int32 Points = 1;
 
